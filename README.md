@@ -70,4 +70,10 @@ The game could be played with 2 or 3 players.
 
 ## Architecture
 Frontend: `react-chess` for drag and drop chess board
+
 Backend: Flask Backend with Python `chess` library. This allows for more flexible board arrangements that wouldn't otherwise be legal in `chess.js`
+
+## Running App
+Frontend: go to root folder of react app and run `npm run start`
+
+Backend: go to backend folder and run `python 3 main.py`
