@@ -1,70 +1,73 @@
-# Getting Started with Create React App
+# Firefighter Chess
+Source video: https://www.youtube.com/watch?v=JqdnPCEvvqY
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Given Rules
+In this variant, one player controls a firefighter and their firehose.
 
-## Available Scripts
+### Firefighter
+- Starting position: e1
+- Movement: King
+- Attack: None; only firehose can capture fire.
 
-In the project directory, you can run:
+### Firehose
+- Starting position: d1
+- Movement
+    - Moves with the firefighter if they go up, down, left, right
+    - Can move the firehose around the firefighter.
+- Attack: Has queen attacks. Can capture multiple fire pieces along its attack path.
 
-### `npm start`
+### Fire
+- Starting positions: a4-h5 (16 pieces along ranks 4 and 5)
+- Movement: Pawn movement. 2 pieces moved per turn.
+- Attack: Pawn captures. Can only be captured by firehose attack. Can be jumped over.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Victims
+- Starting positions: h1-h7 (back rank royal pieces)
+- Movement: regular piece movement
+- Attack: None; only firehose can capture fire.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Goal
+The game ends in any of these conditions:
+- Firefighter: extinguish all the fire
+- Fire: Capture ANY of the victim pieces
+- Victims: Evade capture and have all pieces reach the other site of the board
 
-### `npm test`
+The firefighter and victims are on the same team.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Implementation
+The firefighter and victims are one color, while the fire is the opposite color.
 
-### `npm run build`
+### Starting movement
+For fairness and consistency, fire always goes first.
+- It would be unfair for the firefighter to start first as they can destroy 2 fire right away.
+- If the victim pieces move first, that would give then extra time to prepare/escape. Also unfair against fire.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Movement Types
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### Firefighter
+The firefighter can make one of three move types
+1. Move up, down, left or right
+2. Move the hose to any of the spaces around them
+3. Activate the firehose to destroy all fire in the attack line of the queen (horizontal, vertical, or diagonal)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+#### Victims
+Can move one of their pieces towards "White's side" avoiding the fire
 
-### `npm run eject`
+#### Fire
+Fire can move two of their pawns in one turn. Moves towards the victim pieces
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Player count
+The game could be played with 2 or 3 players.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+#### 2 Players
+- Player 1 controls the firefighter and their hose, and all the victim pieces.
+- Player 2 controls the fire pieces.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+#### 3 Players
+- Player 1 controls the firefighter and their hose.
+- Player 2 controls the fire pieces.
+- Player 3 controls the victim pieces.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Architecture
+Frontend: `react-chess` for drag and drop chess board
+Backend: Flask Backend with Python `chess` library. This allows for more flexible board arrangements that wouldn't otherwise be legal in `chess.js`
